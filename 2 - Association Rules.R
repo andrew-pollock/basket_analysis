@@ -7,9 +7,6 @@ library(arulesViz)
 # Load in the processed data
 sales_data <- read.csv("./data/processed/processed_sales_data.csv")
 
-# Check the structure
-str(sales_data)
-
 # Drop unneeded columns
 sales_data <- sales_data %>% select(-member, -sale_date)
 
@@ -27,13 +24,12 @@ basket_transactions
 # What are the most common items?
 itemFrequencyPlot(basket_transactions, topN = 15, xlab = "Products", ylab = "Product Frequency", 
                   main = "Most Common Products in Transaction Data")
-# I might need to merge some similar products
 
 
 # Relaxed rules
 relaxed_rules <- apriori(basket_transactions, 
                  parameter = list(minlen=2, maxlen=6, sup = 0.001, conf = 0.005)) 
-# This produced possible 1211 rules
+relaxed_rules
 
 
 # Plotting these rules by support and confidence
@@ -60,12 +56,11 @@ hist(quality(refined_rules)$lift,
 
 # Filtering to just rules with a lift over 0.8
 final_rules <- subset(refined_rules, subset = lift > 0.8)
+final_rules
 
 # Inspecting final set of rules
 inspect(final_rules)
 
 # Plotting these as a graph
 plot(final_rules, method= "graph")
-
-
 
